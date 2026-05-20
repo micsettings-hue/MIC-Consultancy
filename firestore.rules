@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global safety catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // Reusable core predicates
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+    
+    // Administrative logic matching local email verified runtime parameters
+    function isAdmin() {
+      return isEmailVerified() && request.auth.token.email == "mic.settings@gmail.com";
+    }
+    
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+    
+    // Immutable Application blueprint schema validator
+    function isValidApplication(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.userId == request.auth.uid
+        && data.userEmail == request.auth.token.email
+        && data.companyName is string && data.companyName.size() > 0 && data.companyName.size() <= 250
+        && data.contactPerson is string && data.contactPerson.size() > 0 && data.contactPerson.size() <= 250
+        && data.email is string && data.email.size() > 0 && data.email.size() <= 250
+        && data.selectedPackage is string && data.selectedPackage.size() <= 250
+        && data.growthGaps is string && data.growthGaps.size() <= 6000
+        && data.status in ['pending', 'approved', 'rejected']
+        && data.createdAt is string; // Timestamp ISO representation
+    }
+
+    // Applications security gate
+    match /applications/{applicationId} {
+      allow get: if isEmailVerified() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isAdmin();
+      allow create: if isEmailVerified() && isValidId(applicationId) && applicationId == request.auth.uid && isValidApplication(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+    
+    // Client branding blueprints security gate (Restricted to Administrators/Consultants)
+    match /clients/{clientId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

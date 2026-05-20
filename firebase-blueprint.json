@@ -1,0 +1,48 @@
+{
+  "entities": {
+    "Application": {
+      "title": "Application",
+      "description": "Growth Strategy Intake application submitted by users for 1:1 consultation.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID equal to user UID or random ID" },
+        "userId": { "type": "string", "description": "The Google account user UID" },
+        "userEmail": { "type": "string", "description": "Authorized Google Email of applicant" },
+        "companyName": { "type": "string", "description": "Applicant business primary brand name" },
+        "contactPerson": { "type": "string", "description": "Lead profile name" },
+        "email": { "type": "string", "description": "Dedicated communication email" },
+        "selectedPackage": { "type": "string", "description": "The selected consulting tier or session details" },
+        "growthGaps": { "type": "string", "description": "User business challenges details" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "userEmail", "companyName", "contactPerson", "email", "selectedPackage", "status", "createdAt"]
+    },
+    "ClientAccount": {
+      "title": "ClientAccount",
+      "description": "An active brand client account managed in the workspace.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientName": { "type": "string" },
+        "contactPerson": { "type": "string" },
+        "email": { "type": "string" },
+        "status": { "type": "string", "enum": ["running", "starting soon", "ended"] },
+        "createdAt": { "type": "string" },
+        "playbookState": { "type": "object" },
+        "historyLog": { "type": "array" }
+      },
+      "required": ["id", "clientName", "contactPerson", "email", "status", "createdAt", "playbookState"]
+    }
+  },
+  "firestore": {
+    "/applications/{applicationId}": {
+      "schema": "Application",
+      "description": "Collection storing initial intake consultation session applications."
+    },
+    "/clients/{clientId}": {
+      "schema": "ClientAccount",
+      "description": "Collection of main client branding blueprints managed by administrative leads."
+    }
+  }
+}

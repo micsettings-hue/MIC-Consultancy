@@ -1,0 +1,6 @@
+{
+  "name": "MIC Brand Launch Playbook",
+  "description": "An interactive 1:1 consultancy playbook and strategy suite for Marketing & Innovation Collective brand launches, complete with automated Word document generation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
