@@ -39,6 +39,8 @@ export interface CompetitorData {
   pricingRating: number;
   trustRating: number;
   onlineRating: number;
+  supportRating: number;
+  socialRating: number;
 }
 
 export interface PriorityTask {
@@ -64,6 +66,7 @@ export interface PlaybookState {
   tasks: PriorityTask[];
   weeklyProgress: WeeklyProgressRow[];
   comments: string;
+  diagnosticAnswers?: string[];
 }
 
 export interface ClientAccount {

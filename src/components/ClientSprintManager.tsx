@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { ClientAccount, PlaybookState } from '../types';
 import { jsPDF } from 'jspdf';
 import { collection, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db, handleFirestoreError, OperationType } from '../firebase';
 import { 
   Users, 
   UserPlus, 
@@ -55,6 +55,7 @@ export default function ClientSprintManager({
       setIncomingApps(apps);
     }, (error) => {
       console.error("Error monitoring applications collection in Admin panel:", error);
+      handleFirestoreError(error, OperationType.GET, 'applications');
     });
     return () => unsub();
   }, []);
@@ -68,6 +69,7 @@ export default function ClientSprintManager({
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       console.error("Error approving intake application:", err);
+      handleFirestoreError(err, OperationType.UPDATE, `applications/${app.id}`);
     }
   };
 
@@ -77,6 +79,7 @@ export default function ClientSprintManager({
       await updateDoc(docRef, { status: 'rejected' });
     } catch (err) {
       console.error("Error rejecting intake application:", err);
+      handleFirestoreError(err, OperationType.UPDATE, `applications/${appId}`);
     }
   };
 
@@ -86,6 +89,7 @@ export default function ClientSprintManager({
       await deleteDoc(docRef);
     } catch (err) {
       console.error("Error dismissing intake application:", err);
+      handleFirestoreError(err, OperationType.DELETE, `applications/${appId}`);
     }
   };
 

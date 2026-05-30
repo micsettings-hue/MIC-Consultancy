@@ -32,7 +32,9 @@ export const INITIAL_COMPETITORS: CompetitorData[] = [
     contentRating: 7,
     pricingRating: 8,
     trustRating: 8,
-    onlineRating: 7
+    onlineRating: 7,
+    supportRating: 6,
+    socialRating: 7
   },
   {
     name: 'Competitor 2',
@@ -47,7 +49,9 @@ export const INITIAL_COMPETITORS: CompetitorData[] = [
     contentRating: 6,
     pricingRating: 6,
     trustRating: 5,
-    onlineRating: 8
+    onlineRating: 8,
+    supportRating: 5,
+    socialRating: 8
   },
   {
     name: 'Competitor 3',
@@ -62,7 +66,9 @@ export const INITIAL_COMPETITORS: CompetitorData[] = [
     contentRating: 4,
     pricingRating: 4,
     trustRating: 4,
-    onlineRating: 5
+    onlineRating: 5,
+    supportRating: 3,
+    socialRating: 4
   }
 ];
 
@@ -102,7 +108,19 @@ export const INITIAL_STATE: PlaybookState = {
     { weekName: 'Week 3 (Days 15–21)', actions: '', wins: '', challenges: '', focus: '' },
     { weekName: 'Week 4 (Days 22–30)', actions: '', wins: '', challenges: '', focus: '' }
   ],
-  comments: ''
+  comments: '',
+  diagnosticAnswers: [
+    'Brand-new organic products storefront',
+    'Low traffic on Shopify and checkout abandonment',
+    'Female urban professionals aged 22-35 in Dhaka',
+    'Under 10 sales completed in a month',
+    'Basic Instagram page and incomplete website setup',
+    'No previous custom paid campaign experience',
+    'True organic components tested on premium skin',
+    'BDT 10,000 intended test budget',
+    'Owner has low capacity for reels shooting',
+    'Acquiring first 30 repeat customers'
+  ]
 };
 
 export function loadSavedPlaybook(): PlaybookState {
@@ -171,7 +189,9 @@ export const SEEDED_PLAYBOOKS: { [key: string]: PlaybookState } = {
         contentRating: 8,
         pricingRating: 9,
         trustRating: 7,
-        onlineRating: 8
+        onlineRating: 8,
+        supportRating: 7,
+        socialRating: 8
       }
     ],
     tasks: INITIAL_TASKS.map(t => ({ ...t, clientPriority: t.id === 'ts2' || t.id === 'ts5' ? 'HIGH' : 'MEDIUM' })),
@@ -181,7 +201,19 @@ export const SEEDED_PLAYBOOKS: { [key: string]: PlaybookState } = {
       { weekName: 'Week 3 (Days 15–21)', actions: '', wins: '', challenges: '', focus: '' },
       { weekName: 'Week 4 (Days 22–30)', actions: '', wins: '', challenges: '', focus: '' }
     ],
-    comments: ' Arif represents a very passionate owner. Highly engaged during strategy sessions!'
+    comments: ' Arif represents a very passionate owner. Highly engaged during strategy sessions!',
+    diagnosticAnswers: [
+      'Active brand-new cosmetics store launched 2 months ago in Dhaka',
+      'Low website loading speed (9 seconds) causing massive shopping cart bounce rates during social campaigns',
+      'Urban modern women aged 18-35 in Dhaka searching for local cruelty-free skincare formulas',
+      'Completed 32 transactions total last month, mostly via Instagram DMs',
+      'Strong organic Instagram but missing a verified Facebook Pixel or Conversion API installation',
+      'No previous custom paid campaign experience, only basic post boosts',
+      'Scientific dermatological test verification, local vegan cruelty-free active formulations showing 28-day skin improvements',
+      'Dedicated ad spend testing budget of BDT 25,000 per month',
+      'Founder is highly passionate and can create 2-3 genuine, raw skincare routine video reels weekly',
+      'Achieve 150+ monthly sales and drop landing page load speeds to under 3 seconds'
+    ]
   },
   'echo': {
     brandClarity: {
@@ -223,7 +255,9 @@ export const SEEDED_PLAYBOOKS: { [key: string]: PlaybookState } = {
         contentRating: 7,
         pricingRating: 8,
         trustRating: 8,
-        onlineRating: 6
+        onlineRating: 6,
+        supportRating: 8,
+        socialRating: 6
       }
     ],
     tasks: INITIAL_TASKS.map(t => ({ ...t, clientPriority: t.id === 'ts1' || t.id === 'ts2' ? 'HIGH' : 'MEDIUM' })),
@@ -233,7 +267,19 @@ export const SEEDED_PLAYBOOKS: { [key: string]: PlaybookState } = {
       { weekName: 'Week 3 (Days 15–21)', actions: '', wins: '', challenges: '', focus: '' },
       { weekName: 'Week 4 (Days 22–30)', actions: '', wins: '', challenges: '', focus: '' }
     ],
-    comments: 'Tasnim is preparing fabric supplies. Onboarding starts next Wednesday!'
+    comments: 'Tasnim is preparing fabric supplies. Onboarding starts next Wednesday!',
+    diagnosticAnswers: [
+      'Early-stage sustainable linen apparel brand preparing for market entry',
+      'No digital assets built yet. Blocked on creating visual identity guidelines and modern minimalist logo',
+      'Environmentally aware Gen Z and millennial professionals around Dhaka aged 22-40',
+      'Zero monthly sales so far (pre-launch phase)',
+      'Placeholder social pages only, no online website storefront or analytics pixel',
+      'No active paid advertising experience',
+      'Premium pre-shrunk hand-loomed minimal aesthetic linen garments designed to look good for 100+ washes',
+      'Starting trial budget of BDT 12,000/month',
+      'Internal capacity is low, relies on outsourcing creative shoots and product flat-lays',
+      'Launch brand securely and drive first 20 paid linen orders in Month 1'
+    ]
   },
   'chowdhury': {
     brandClarity: {
@@ -275,7 +321,9 @@ export const SEEDED_PLAYBOOKS: { [key: string]: PlaybookState } = {
         contentRating: 4,
         pricingRating: 5,
         trustRating: 7,
-        onlineRating: 3
+        onlineRating: 3,
+        supportRating: 5,
+        socialRating: 3
       }
     ],
     tasks: INITIAL_TASKS.map(t => ({ ...t, clientPriority: 'MEDIUM' })),
@@ -285,7 +333,19 @@ export const SEEDED_PLAYBOOKS: { [key: string]: PlaybookState } = {
       { weekName: 'Week 3 (Days 15–21)', actions: 'Conducted first full team review representing completed 30-day coaching sprint.', wins: 'Client team fully onboarded to tracking dashboards. Sprint finished with 130% target acquisition.', challenges: 'None.', focus: 'Transitioning to monthly advisory retainer structures' },
       { weekName: 'Week 4 (Days 22–30)', actions: 'Completed final sprint audits. Strategic workbook signed off.', wins: 'Consultancy retainer contract signed at BDT 30,000/mo.', challenges: 'None.', focus: 'Completed!' }
     ],
-    comments: 'Excellent enterprise success! Wasif is completely aligned with tech-logistics model.'
+    comments: 'Excellent enterprise success! Wasif is completely aligned with tech-logistics model.',
+    diagnosticAnswers: [
+      'Static, operational corporate logistics brand stuck in stagnation',
+      'Difficulty in closing larger enterprise clients who require massive brand trust and real-time shipment transparency',
+      'Warehouse owners, local agricultural crops distributors, and high-value machinery manufacturers',
+      '12 active legacy contracts, but zero digital customer inquiries',
+      'B2B website with quotes calculator is live, but lacking clean case study proofs or trust certificates',
+      'Spent BDT 50,000 on general boost posts last year with extremely low conversion yield',
+      'Guaranteed 24-hour nationwide delivery with 100% full-value cargo insurance coverage logs',
+      'Dedicated marketing spend budget of BDT 35,000 per month',
+      'Team can produce 1 high-impact written client case study PDF and visual testimonial quotes banner quarterly',
+      'Sign 5 high-yield ongoing corporate accounts and transition fully into a premium modern tech-logistics status'
+    ]
   }
 };
 

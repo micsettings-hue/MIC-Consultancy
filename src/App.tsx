@@ -19,8 +19,9 @@ import CompetitorPositioning from './components/CompetitorPositioning';
 import PriorityStack from './components/PriorityStack';
 import ProgressTracker from './components/ProgressTracker';
 import AiStrategicAdvisor from './components/AiStrategicAdvisor';
-import BrandLandingPage from './components/BrandLandingPage';
+import WorkspaceLoginGate from './components/WorkspaceLoginGate';
 import ClientSprintManager from './components/ClientSprintManager';
+import DiagnosticWorkspace from './components/DiagnosticWorkspace';
 import { exportPlaybookToDocx } from './DocxExport';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -68,17 +69,11 @@ export default function App() {
   
   // URL Routing state
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
-  const [activeTab, setActiveTab] = useState<'landing' | 'clients' | 'playbook' | 'ai_advisor' | 'trackers'>('landing');
+  const [activeTab, setActiveTab] = useState<'clients' | 'playbook' | 'ai_advisor' | 'trackers'>('clients');
   const [activeChapter, setActiveChapter] = useState<string>('overview');
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [saveStatus, setSaveStatus] = useState<string>('Saved to LocalStorage');
   const [showResetConfirm, setShowResetConfirm] = useState<boolean>(false);
-
-  // Helper to determine if current path belongs to the Playbook Suite
-  const isPlaybookSuite = (path: string) => {
-    const p = path.toLowerCase();
-    return p.includes('playbook') || p.includes('brand-launch') || p.includes('workspace');
-  };
 
   // Sync URL changes with active tab matching
   useEffect(() => {
@@ -95,33 +90,16 @@ export default function App() {
   };
 
   useEffect(() => {
-    const isSuite = isPlaybookSuite(currentPath);
-    if (isSuite) {
-      if (currentPath.toLowerCase().includes('trackers')) {
-        setActiveTab('trackers');
-      } else if (currentPath.toLowerCase().includes('advisor') || currentPath.toLowerCase().includes('ai')) {
-        setActiveTab('ai_advisor');
-      } else if (currentPath.toLowerCase().includes('workshops') || currentPath.toLowerCase().includes('guidelines') || currentPath.toLowerCase().includes('pages')) {
-        setActiveTab('playbook');
-      } else {
-        // default to clients sprint manager
-        if (activeTab === 'landing' || activeTab === 'clients') {
-          setActiveTab('clients');
-        }
-      }
+    if (currentPath.toLowerCase().includes('trackers')) {
+      setActiveTab('trackers');
+    } else if (currentPath.toLowerCase().includes('advisor') || currentPath.toLowerCase().includes('ai')) {
+      setActiveTab('ai_advisor');
+    } else if (currentPath.toLowerCase().includes('workshops') || currentPath.toLowerCase().includes('guidelines') || currentPath.toLowerCase().includes('pages')) {
+      setActiveTab('playbook');
     } else {
-      setActiveTab('landing');
+      setActiveTab('clients');
     }
   }, [currentPath]);
-
-  // Check authorization constraints for playbook routes
-  useEffect(() => {
-    const isSuite = isPlaybookSuite(currentPath);
-    if (!loadingAuth && isSuite && !isAdmin) {
-      // Force exit out of premium workspace console for unauthorized emails
-      navigateTo('/');
-    }
-  }, [loadingAuth, currentPath, isAdmin]);
 
   // On Mount: Load saved client list and set active client
   useEffect(() => {
@@ -278,20 +256,11 @@ export default function App() {
     );
   }
 
-  // 1. PUBLIC LANDING VIEW LAYOUT (Independent Page)
-  if (!isPlaybookSuite(currentPath)) {
+  // 1. GUEST ACCESS LEVEL BLOCKER (If not admin, present the clean login gate immediately)
+  if (!isAdmin) {
     return (
-      <BrandLandingPage 
-        onEnterWorkspace={() => navigateTo('/MIC-Brand-Launch/playbook-suite')}
-        onSelectService={(serviceName) => {
-          console.log('Selected service package:', serviceName);
-        }}
-        onAddClient={(name, person, email, status, selectedPackage, notes) => {
-          handleAddClient(name, person, email, status);
-        }}
-        navigateTo={navigateTo}
+      <WorkspaceLoginGate 
         user={user}
-        isAdmin={isAdmin}
         onLogin={signInWithGoogle}
         onLogout={logOut}
       />
@@ -386,14 +355,6 @@ export default function App() {
             <div className="flex items-center gap-2 border-l border-slate-200 pl-2.5">
               <button
                 type="button"
-                onClick={() => navigateTo('/')}
-                className="text-xs text-[#7c3aed] hover:text-purple-900 font-semibold px-2 py-1.5 hover:bg-purple-50 rounded-lg transition-all flex items-center gap-1"
-                title="Return to Landing Page"
-              >
-                Lander ➔
-              </button>
-              <button
-                type="button"
                 onClick={logOut}
                 className="hover:bg-rose-50 text-slate-400 hover:text-rose-650 p-2 rounded-lg transition-colors cursor-pointer text-xs"
                 title="Sign Out Admin Client"
@@ -470,15 +431,7 @@ export default function App() {
           Implementation Logs & QA
         </button>
 
-        <button
-          id="btn-tab-view-landing"
-          type="button"
-          onClick={() => navigateTo('/')}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 transition-all cursor-pointer md:ml-auto"
-        >
-          <Globe className="w-4 h-4" />
-          Visitor Landing Page ➔
-        </button>
+
       </div>
 
       {/* Core Working Area */}
@@ -503,9 +456,25 @@ export default function App() {
             
             {/* Sidebar Chapters Navigation */}
             <div className="xl:col-span-1 border-r border-slate-100 pr-2">
-              <div className="bg-purple-500/10 border border-purple-500/20 text-purple-950 rounded-xl p-3 mb-4 text-xs">
-                <span>Working Brand Context:</span>
-                <span className="font-bold block text-slate-900 mt-0.5">{state.brandClarity.companyName}</span>
+              <div className="bg-purple-500/10 border border-purple-500/20 text-purple-950 rounded-xl p-3.5 mb-4 text-xs space-y-2">
+                <label htmlFor="playbook-client-select" className="block text-[10px] font-bold text-purple-800 uppercase tracking-wider">
+                  Active Strategy Client:
+                </label>
+                <select
+                  id="playbook-client-select"
+                  value={activeClientId}
+                  onChange={(e) => handleSelectClient(e.target.value)}
+                  className="w-full bg-white border border-purple-200 text-slate-800 text-xs rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-400 font-medium cursor-pointer"
+                >
+                  {clients.map((cli) => (
+                    <option key={cli.id} value={cli.id}>
+                      {cli.clientName} ({cli.status})
+                    </option>
+                  ))}
+                </select>
+                <div className="pt-1 text-[9px] text-slate-500 font-medium">
+                  Switch the active partner profile above to load their brand workshops.
+                </div>
               </div>
               <PlaybookReader 
                 activeChapter={activeChapter} 
@@ -520,21 +489,13 @@ export default function App() {
                 
                 {/* Visual Reading Card */}
                 <div className="bg-white rounded-xl border border-slate-200/80 p-6 shadow-xs min-h-[460px]" id="manual-text-viewport">
-                  <PlaybookPages activeChapter={activeChapter} />
+                  <PlaybookPages activeChapter={activeChapter} state={state} />
                 </div>
 
                 {/* Interactive State Editors */}
                 <div className="space-y-6" id="interactive-inputs-viewport">
                   {activeChapter === 'overview' && (
-                    <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-6 text-slate-500 shadow-inner flex flex-col justify-center items-center text-center space-y-3 min-h-[460px]">
-                      <CheckCircle2 className="w-12 h-12 text-[#7c3aed] stroke-1" />
-                      <div className="max-w-xs space-y-1">
-                        <h4 className="font-semibold text-slate-800 text-xs">Overview Verified</h4>
-                        <p className="text-[10px] leading-relaxed">
-                          Review guidelines before moving down. Head over to <strong>"Session 1: Discovery Guidelines"</strong> in the sidebar menu to deploy your first interactive Digital Scorecard review metric!
-                        </p>
-                      </div>
-                    </div>
+                    <DiagnosticWorkspace state={state} onChange={handleStateChange} />
                   )}
 
                   {activeChapter === 'session1' && (

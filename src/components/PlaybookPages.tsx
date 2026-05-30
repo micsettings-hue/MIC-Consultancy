@@ -4,13 +4,15 @@
  */
 
 import React from 'react';
-import { Target, Star, Award, TrendingUp, Calendar, AlertCircle } from 'lucide-react';
+import { Target, Star, Award, TrendingUp, Calendar, AlertCircle, ClipboardList, Gauge } from 'lucide-react';
+import { PlaybookState } from '../types';
 
 interface Props {
   activeChapter: string;
+  state?: PlaybookState;
 }
 
-export default function PlaybookPages({ activeChapter }: Props) {
+export default function PlaybookPages({ activeChapter, state }: Props) {
   switch (activeChapter) {
     case 'overview':
       return (
@@ -78,6 +80,107 @@ export default function PlaybookPages({ activeChapter }: Props) {
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          {/* 10 Diagnostic Screening Questions for Growth Sprints */}
+          <div className="space-y-4 pt-4 border-t border-slate-100">
+            <h3 className="font-semibold text-slate-800 text-sm flex items-center gap-2">
+              <ClipboardList className="w-4 h-4 text-[#7c3aed]" />
+              10-Point Growth Sprint Screening & Diagnostics
+            </h3>
+            <p className="text-slate-500 text-xs">
+              Deconstructed screening questions utilized by consultants to diagnose growth blockers and design strategic pivots across new launches, legacy revamps, or rapid sprints:
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              {[
+                {
+                  num: "1",
+                  tag: "Brand Lifecycle",
+                  q: "Is this a brand-new market entry, an old legacy brand seeking a major repositioning pivot, or an active business stuck in stagnation?",
+                  badge: "Lifecycle Profile"
+                },
+                {
+                  num: "2",
+                  tag: "Core Roadblock",
+                  q: "What is currently the single greatest operational or digital bottleneck preventing you from scaling your conversions?",
+                  badge: "Friction Point"
+                },
+                {
+                  num: "3",
+                  tag: "Audience Persona",
+                  q: "Who is your absolute highest-value ideal customer avatar, and where do they aggregate online?",
+                  badge: "Target Audience"
+                },
+                {
+                  num: "4",
+                  tag: "Historical Traction",
+                  q: "How many organic inquiries, demo requests, or completed sales did you generate over the past thirty days?",
+                  badge: "Sales Baseline"
+                },
+                {
+                  num: "5",
+                  tag: "Digital Assets Audit",
+                  q: "Do you have an existing responsive landing page, certified domain, social accounts, and tracking pixels configured?",
+                  badge: "Infrastructure"
+                },
+                {
+                  num: "6",
+                  tag: "Paid Advertising History",
+                  q: "Have you previously run custom paid campaigns, and if yes, what was your approximate scale, CPC, and ROAS?",
+                  badge: "Media Spend"
+                },
+                {
+                  num: "7",
+                  tag: "USP & Positioning",
+                  q: "Why would a client purchase your services or products instead of choosing an established direct competitor?",
+                  badge: "Core Promise"
+                },
+                {
+                  num: "8",
+                  tag: "Financial Commitment",
+                  q: "Do you have a dedicated budget (minimum BDT 10k-20k/month test spend) dedicated purely to ad testing and sprints?",
+                  badge: "Marketing Capital"
+                },
+                {
+                  num: "9",
+                  tag: "Creative Production",
+                  q: "How many custom testimonial clips, banners, or write-ups can your internal team reliably deploy every week?",
+                  badge: "Content Capacity"
+                },
+                {
+                  num: "10",
+                  tag: "Success Parameters",
+                  q: "If we execute this growth sprint, which specific outcome metrics would define an absolute home-run victory for you?",
+                  badge: "KPI Goals"
+                }
+              ].map((item, idx) => {
+                const clientAnswer = state?.diagnosticAnswers?.[idx];
+                return (
+                  <div key={item.num} className="bg-slate-50/80 border border-slate-200/50 p-4 rounded-xl space-y-2.5 flex flex-col justify-between transition-all hover:bg-slate-50" id={`screening-q-${item.num}`}>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] uppercase font-mono font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-[#e9e3ff]">
+                          {item.tag}
+                        </span>
+                        <span className="font-mono text-slate-400 text-[11px] font-bold">Q{item.num}</span>
+                      </div>
+                      <p className="text-slate-700 text-xs font-semibold leading-relaxed">"{item.q}"</p>
+                      
+                      {clientAnswer && (
+                        <div className="mt-2.5 bg-purple-500/5 border-l-2 border-purple-500 p-2.5 rounded-r-lg">
+                          <span className="text-[8px] font-mono font-bold text-purple-700 block uppercase tracking-wider mb-0.5">Logged Answer:</span>
+                          <p className="text-[11px] text-[#2e1065] italic font-medium font-sans">"{clientAnswer}"</p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="pt-2 border-t border-slate-200/40 flex items-center justify-between text-[9px] text-slate-500 font-mono">
+                      <span>Focus Area: <strong className="text-slate-700 font-semibold">{item.badge}</strong></span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -311,6 +414,78 @@ export default function PlaybookPages({ activeChapter }: Props) {
               Always initiate ad campaigns with broad targeting (Age, primary regional areas like Dhaka, Chittagong). Let Meta’s pixel identify candidates with the highest conversion action probability. Scale ad budgets exclusively by 20% every 3 days to avoid resetting the learning loop.
             </p>
           </div>
+
+          {state && (
+            <div className="bg-slate-900 border border-slate-800 text-white rounded-xl p-5 space-y-4 shadow-sm mt-5" id="dynamic-roadmap-guidelines">
+              <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+                <Gauge className="w-4 h-4 text-emerald-400" />
+                <h3 className="font-bold text-xs uppercase tracking-wider font-mono text-emerald-300">
+                  Client-Specific Growth Sprint Guidelines
+                </h3>
+              </div>
+
+              <p className="text-[11px] text-slate-400 leading-normal font-sans">
+                Synthesized strategic direction prepared specifically for <strong>{state.brandClarity?.companyName || "the active partner"}</strong> using their 10 Diagnostics Answers:
+              </p>
+
+              <div className="space-y-3.5 text-xs font-sans">
+                <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-1.5">
+                  <span className="text-[9px] font-mono text-purple-400 font-bold uppercase tracking-wider block">
+                    Pillar I: Repositioning & Audience Entry Play
+                  </span>
+                  <p className="text-slate-300 text-[11px] leading-relaxed">
+                    {(() => {
+                      const ans1 = state.diagnosticAnswers?.[0]?.toLowerCase() || '';
+                      if (!ans1) return "No response logged for Brand Lifecycle in Overview. Fill out Q1 in diagnostics to generate target recommendations.";
+                      if (ans1.includes('new') || ans1.includes('start') || ans1.includes('entry') || ans1.includes('onboard') || ans1.includes('cosmetics')) {
+                        return `This is classified as a NEW LAUNCH SPRINT. Guidelines: Focus on fast trust-building signals. Seed organic micro-videos on social media, highlight client-centric guarantees, and do not scale cold media spend until at least 5 local customer validation video clips are hosted.`;
+                      }
+                      if (ans1.includes('old') || ans1.includes('legacy') || ans1.includes('pivot') || ans1.includes('stagn')) {
+                        return "This is classified as a LEGACY REPOSITIONING PIVOT. Guidelines: Streamline visual packaging immediately, construct modernized high-ticket landing pages, and launch highly targeted lookalike custom audience subsets derived from historic contact lists.";
+                      }
+                      return "This is a GENERAL GROWTH SCALABILITY SPRINT. Guidelines: Optimize CTR hooks on Reels, implement retargeting catalogs, and segment target markets within high net-worth zones (e.g. Dhaka Dhanmondi, Gulshan, Banani).";
+                    })()}
+                  </p>
+                </div>
+
+                <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-1.5">
+                  <span className="text-[9px] font-mono text-purple-400 font-bold uppercase tracking-wider block">
+                    Pillar II: Conversions & Tech Infrastructure Remediation
+                  </span>
+                  <p className="text-slate-300 text-[11px] leading-relaxed">
+                    {(() => {
+                      const ans2 = state.diagnosticAnswers?.[1]?.toLowerCase() || '';
+                      if (!ans2) return "No response logged for Roadblocks in Overview. Fill out Q2 in diagnostics to generate tech actions.";
+                      if (ans2.includes('speed') || ans2.includes('loading') || ans2.includes('website') || ans2.includes('shopify') || ans2.includes('checkout') || ans2.includes('bounce')) {
+                        return "Priority Action: Address checkout load speed directly. Under BDT-restricted campaigns, every 1-second delay results in massive immediate drop-offs. Re-render Shopify elements using lightweight modules, compress visual catalogs, and test immediate local gateways.";
+                      }
+                      if (ans2.includes('sales') || ans2.includes('traffic') || ans2.includes('lead') || ans2.includes('customer') || ans2.includes('trust')) {
+                        return "Priority Action: Capture leads directly inside social ecosystems before routing. Since website conversions are sluggish, implement native Meta Lead Ads linked to automated discount incentives or instant trial guides.";
+                      }
+                      return `Priority Action: Address specific bottleneck: "${state.diagnosticAnswers?.[1]}" to minimize drop-off conversions.`;
+                    })()}
+                  </p>
+                </div>
+
+                <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-1.5">
+                  <span className="text-[9px] font-mono text-purple-400 font-bold uppercase tracking-wider block">
+                    Pillar III: Creative Asset Production and Ad Budgets
+                  </span>
+                  <p className="text-slate-300 text-[11px] leading-relaxed">
+                    {(() => {
+                      const ansBudget = state.diagnosticAnswers?.[7] || state.brandClarity?.monthlyAdBudget || 'BDT 15,000';
+                      const ansCreative = state.diagnosticAnswers?.[8]?.toLowerCase() || '';
+                      let creativeGuideline = "Deploy 2 distinct UGC-style mobile video hooks weekly to test audience retention variables.";
+                      if (ansCreative.includes('low') || ansCreative.includes('limited') || ansCreative.includes('capacity') || ansCreative.includes('no time')) {
+                        creativeGuideline = "Since internal content production is limited, rely heavily on clean high-contrast text screenshot overlays of positive user testimonials. This bypasses structural filming resource constraints and converts with high trust.";
+                      }
+                      return `Creative Guideline: ${creativeGuideline} Budget Blueprint: Allocate 70% of testing spend (${ansBudget}) to direct conversion hooks, 20% to retargeting visitor custom pools, and 10% to broad awareness traffic testing.`;
+                    })()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       );
 

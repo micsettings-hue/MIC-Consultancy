@@ -37,7 +37,9 @@ export default function CompetitorPositioning({ state, onChange }: Props) {
 
   // Helper to calculate total rating score for clean comparison
   const calcTotalRatingScore = (c: CompetitorData) => {
-    return ((c.contentRating + c.pricingRating + c.trustRating + c.onlineRating) / 4).toFixed(1);
+    const support = c.supportRating ?? 5;
+    const social = c.socialRating ?? 5;
+    return ((c.contentRating + c.pricingRating + c.trustRating + c.onlineRating + support + social) / 6).toFixed(1);
   };
 
   return (
@@ -236,6 +238,34 @@ export default function CompetitorPositioning({ state, onChange }: Props) {
                     className="w-full h-1.5 accent-orange-500 bg-slate-200 rounded-lg cursor-pointer"
                     value={c.onlineRating}
                     onChange={(e) => handleCompetitorChange(idx, 'onlineRating', parseInt(e.target.value))}
+                  />
+                </div>
+
+                {/* Customer Support Quality */}
+                <div>
+                  <div className="flex justify-between text-[10px] font-mono text-slate-500 mb-1">
+                    <span>Customer Support Quality</span>
+                    <span className="font-bold">{c.supportRating ?? 5}/10</span>
+                  </div>
+                  <input 
+                    type="range" min="1" max="10" step="1"
+                    className="w-full h-1.5 accent-orange-500 bg-slate-200 rounded-lg cursor-pointer"
+                    value={c.supportRating ?? 5}
+                    onChange={(e) => handleCompetitorChange(idx, 'supportRating', parseInt(e.target.value))}
+                  />
+                </div>
+
+                {/* Social Media Engagement Rate */}
+                <div>
+                  <div className="flex justify-between text-[10px] font-mono text-slate-500 mb-1">
+                    <span>Social Media Engagement Rate</span>
+                    <span className="font-bold">{c.socialRating ?? 5}/10</span>
+                  </div>
+                  <input 
+                    type="range" min="1" max="10" step="1"
+                    className="w-full h-1.5 accent-orange-500 bg-slate-200 rounded-lg cursor-pointer"
+                    value={c.socialRating ?? 5}
+                    onChange={(e) => handleCompetitorChange(idx, 'socialRating', parseInt(e.target.value))}
                   />
                 </div>
               </div>
